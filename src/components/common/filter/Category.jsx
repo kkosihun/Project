@@ -57,7 +57,7 @@ const OptionList = styled.div`
 
 const OptionButton = styled.button`
     padding: 8px 20px;
-    border-radius: 999px;
+    border-radius: 25px;
     border: none;
     background: #F2F2F2;
     font-size: 13px;
