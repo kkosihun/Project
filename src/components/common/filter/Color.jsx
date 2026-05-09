@@ -108,36 +108,3 @@ export default function Color({ onClose }) {
         </>
     );
 }
-// export default function Color({ onClose }) {
-//     return (
-//         <>
-//         <OptionList>
-//     {colors.map((row, rowIndex) => (
-//         <OptionRow key={rowIndex}>
-//             {row.map((color) => (
-//                 <OptionButton key={color}>{color}</OptionButton>
-//             ))}
-//         </OptionRow>
-//     ))}
-// </OptionList>
-//             {/* <Overlay onClick={onClose} />
-//             <Modal>
-//                 <ModalHeader>
-//                     <ModalTitle>색상</ModalTitle>
-//                     <CloseButton onClick={onClose}><XIcon src={XUrl} /></CloseButton>
-//                 </ModalHeader>
-//                 <OptionList>
-//                     <OptionButton>red</OptionButton>
-//                     <OptionButton>pink</OptionButton>
-//                     <OptionButton>blue</OptionButton>
-//                     <OptionButton>black</OptionButton>
-//                     <OptionButton>gray</OptionButton>
-//                     <OptionButton>denim</OptionButton>
-//                     <OptionButton>multi</OptionButton>
-//                     <OptionButton>rainbow</OptionButton>
-//                     <OptionButton>holographic</OptionButton>
-//                 </OptionList>
-//             </Modal> */}
-//         </>
-//     );
-// }
