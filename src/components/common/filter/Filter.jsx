@@ -49,8 +49,6 @@ const VectorIcon = styled.img`
 `;
 
 
-//색상버튼
-
 
 export default function Filter() {
 
@@ -77,9 +75,6 @@ export default function Filter() {
         {isSizeOpen && <Size onClose={() => setIsSizeOpen(false)} />}
         {isPriceOpen && <Price onClose={() => setIsPriceOpen(false)} />}
         {isCategoryOpen && <Category onClose={() => setIsCategoryOpen(false)} />}
-        
-
-        
         </>
         
         
