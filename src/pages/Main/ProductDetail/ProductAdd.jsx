@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Line from "../../../../src/assets/images/Line 1.png";
 import Upload from "../../../../src/assets/icons/upload_Icon.png";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const Container = styled.div`
     display: flex;
@@ -20,6 +20,8 @@ const ImageInsert = styled.div`
     background: #F0F0F0;
     border-radius: 15px;
     flex-shrink: 0;
+        cursor: pointer; /* ✅ 추가 */
+    overflow: hidden; /* ✅ 추가 */
 `;
 
 const UploadIcon = styled.img`
@@ -137,6 +139,17 @@ const SubmitButton = styled.div`
     cursor: pointer;
 `;
 
+const PreviewImage = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+`;
+
+const HiddenInput = styled.input`
+    display: none;
+`;
+
 export default function ProductAdd(){
     const [productName, setProductName] = useState("");
     const [rating, setRating] = useState("");
@@ -148,12 +161,37 @@ export default function ProductAdd(){
     const [selectedColor, setSelectedColor] = useState(null);
 
 
+    const [previewImage, setPreviewImage] = useState(null);
+    const fileInputRef = useRef(null);
+
+    const handleImageClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            setPreviewImage(url);
+        }
+    };
+
 
     return(
         <Container>
-            <ImageInsert>
-                <UploadIcon src = {Upload}/>
+
+            <ImageInsert onClick={handleImageClick}>
+            {previewImage ? (
+                <PreviewImage src={previewImage} alt="미리보기" />
+            ) : (<UploadIcon src={Upload} />)}
             </ImageInsert>
+
+            <HiddenInput
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+            />
 
             <LineImage src = {Line}/>
             <TotalFrame>
