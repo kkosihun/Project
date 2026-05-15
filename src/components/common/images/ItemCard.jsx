@@ -52,20 +52,32 @@ const ProductReviews = styled.p`
 `;
 
 
-export default function ItemCard({ itemId, image, name, price, reviewConut }) {
-    const navigate = useNavigate();
-    const { setSelectedProduct } = useProduct(); // ✅
+// export default function ItemCard({ itemId, image, name, price, reviewCount }) {
+//     const navigate = useNavigate();
+//     const { setSelectedProduct } = useProduct();
 
+//     return (
+//         <ProductCard onClick={() => {
+//             navigate(`/item/${itemId}`);   // 이거 하나면 끝!
+//         }}>
+//             <ProductImage src={image} alt={name} />
+//             <ProductName>{name}</ProductName>
+//             <ProductPrice>{price}</ProductPrice>
+//             <ProductReviews>리뷰 {reviewCount}</ProductReviews>
+//         </ProductCard>
+//     );
+// }
+
+export default function ItemCard({ itemId, itemType, image, name, price, reviewCount }) {
+    const navigate = useNavigate();
     return (
         <ProductCard onClick={() => {
-            console.log("카드 클릭됨", { image, name, price, reviewConut });
-            setSelectedProduct({ image, name, price, reviews: reviewConut }); // ✅ Context에 저장
-            navigate(`/item/${itemId}`);
+            navigate(`/item/${itemType}/${itemId}`);   // 👈 itemType 사용
         }}>
             <ProductImage src={image} alt={name} />
             <ProductName>{name}</ProductName>
             <ProductPrice>{price}</ProductPrice>
-            <ProductReviews>리뷰 {reviewConut}</ProductReviews>
+            <ProductReviews>리뷰 {reviewCount}</ProductReviews>
         </ProductCard>
     );
 }

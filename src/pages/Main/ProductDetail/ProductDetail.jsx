@@ -1,5 +1,7 @@
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";   // 👈 useParams 추가
+import { useEffect, useState } from "react";                  // 👈 추가
+import { getItem, deleteItem } from "../../../api/shop";                  // 👈 경로 본인 구조에 맞게!
 import Line from "../../../../src/assets/images/Line 1.png";
 import Star from "../../../../src/assets/icons/star_Icon.png";
 import { useProduct } from "./ProductContext.jsx";
@@ -142,12 +144,129 @@ const ModalButton = styled.div`
     cursor: pointer;
 `;
 
-export default function ProductDetail() {
-    const { selectedProduct, showDeleteModal, setShowDeleteModal } = useProduct();
-    const navigate = useNavigate();
 
-    if (!selectedProduct) return <div>상품 정보를 찾을 수 없어요.</div>;
-    const { image, name, price, reviews } = selectedProduct;
+// export default function ProductDetail() {
+//     const { id } = useParams();                              // 👈 URL에서 id 가져오기
+//     const navigate = useNavigate();
+//     const { showDeleteModal, setShowDeleteModal } = useProduct();  // 모달 상태는 유지
+
+//     const [product, setProduct] = useState(null);
+//     const [loading, setLoading] = useState(true);
+
+//     // 🔑 화면 켜지면 자동으로 API 호출
+//     useEffect(() => {
+//         let cancelled = false;
+//         (async () => {
+//             try {
+//                 setLoading(true);
+//                 const res = await getItem("clothes", id);    // GET /clothes/{id}
+//                 if (!cancelled) setProduct(res);
+//             } catch (err) {
+//                 console.error("상품 조회 실패:", err);
+//                 if (!cancelled) setProduct(null);
+//             } finally {
+//                 if (!cancelled) setLoading(false);
+//             }
+//         })();
+//         return () => { cancelled = true; };
+//     }, [id]);
+
+//     const handleDelete = async () => {
+//         try {
+//             await deleteItem("clothes", id);   // DELETE /clothes/{id}
+//             alert("삭제되었습니다!");
+//             setShowDeleteModal(false);
+//             navigate("/");                     // 메인으로 이동
+//         } catch (err) {
+//             console.error(err);
+//             alert("삭제 실패: " + (err.response?.data?.message || err.message));
+//         }
+//     };
+
+//     if (loading) return <div>로딩 중...</div>;
+//     if (!product) return <div>상품 정보를 찾을 수 없어요.</div>;
+
+//     const { image, name, price, reviews, rating } = product;
+
+//     return (
+//         <>
+//             <Container>
+//                 <LeftSection>
+//                     <ImageBox>
+//                         <ProductImage src={image} alt={name} />
+//                     </ImageBox>
+//                 </LeftSection>
+
+//                 <LineImage src={Line} />
+
+//                 <RightSection>
+//                     <Price>{Number(price).toLocaleString()}원</Price>
+//                     <Name>{name}</Name>
+//                     <ReviewRow>
+//                         <StarIcon src={Star} />
+//                         <Rating>{rating}</Rating>
+//                         <ReviewCount>리뷰 {reviews}</ReviewCount>
+//                     </ReviewRow>
+//                 </RightSection>
+//             </Container>
+
+//             {showDeleteModal && (
+//                 <Overlay>
+//                     <Modal>
+//                         <ModalText>상품을 삭제하시겠습니까?</ModalText>
+//                         <ModalButtons>
+//                             {/* 👇 onClick을 handleDelete로 변경 */}
+//                             <ModalButton onClick={handleDelete}>확인</ModalButton>
+//                             <ModalButton onClick={() => setShowDeleteModal(false)}>취소</ModalButton>
+//                         </ModalButtons>
+//                     </Modal>
+//                 </Overlay>
+//             )}
+//         </>
+//     );
+// }
+
+export default function ProductDetail() {
+    const { type, id } = useParams();
+    const navigate = useNavigate();
+    const { showDeleteModal, setShowDeleteModal } = useProduct();
+
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                setLoading(true);
+                const res = await getItem(type, id);
+                if (!cancelled) setProduct(res);
+            } catch (err) {
+                console.error("상품 조회 실패:", err);
+                if (!cancelled) setProduct(null);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        })();
+        return () => { cancelled = true; };
+    }, [type, id]);
+
+    const handleDelete = async () => {
+        try {
+            await deleteItem(type, id);
+            alert("삭제되었습니다!");
+            setShowDeleteModal(false);
+            navigate("/");
+        } catch (err) {
+            console.error(err);
+            alert("삭제 실패: " + (err.response?.data?.message || err.message));
+        }
+    };
+
+    if (loading) return <div>로딩 중...</div>;
+    if (!product) return <div>상품 정보를 찾을 수 없어요.</div>;
+
+    const { image, name, price, reviews, rating } = product;
 
     return (
         <>
@@ -157,15 +276,13 @@ export default function ProductDetail() {
                         <ProductImage src={image} alt={name} />
                     </ImageBox>
                 </LeftSection>
-
                 <LineImage src={Line} />
-
                 <RightSection>
-                    <Price>{price}</Price>
+                    <Price>{Number(price).toLocaleString()}원</Price>
                     <Name>{name}</Name>
                     <ReviewRow>
                         <StarIcon src={Star} />
-                        <Rating>4.6</Rating>
+                        <Rating>{rating}</Rating>
                         <ReviewCount>리뷰 {reviews}</ReviewCount>
                     </ReviewRow>
                 </RightSection>
@@ -176,10 +293,7 @@ export default function ProductDetail() {
                     <Modal>
                         <ModalText>상품을 삭제하시겠습니까?</ModalText>
                         <ModalButtons>
-                            <ModalButton onClick={() => {
-                                setShowDeleteModal(false);
-                                navigate("/");
-                            }}>확인</ModalButton>
+                            <ModalButton onClick={handleDelete}>확인</ModalButton>
                             <ModalButton onClick={() => setShowDeleteModal(false)}>취소</ModalButton>
                         </ModalButtons>
                     </Modal>

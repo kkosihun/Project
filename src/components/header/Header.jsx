@@ -60,7 +60,7 @@ export default function Header(){
     const {pathname} = useLocation(); // 현재 페이지 경로 불러오기
     const navigate = useNavigate();
     const buttonName = "상품등록";
-    const {id} = useParams(); //상세 페이지의 id 가져오기
+    const {type, id} = useParams(); //상세 페이지의 id 가져오기
     const { setShowDeleteModal } = useProduct();
     
     const isHome = pathname ==="/" || pathname === "/add";
@@ -84,7 +84,7 @@ export default function Header(){
                             <>
                                 <Button onClick={() => navigate("/add")}>{buttonName}</Button>
                                 <Button onClick={() => setShowDeleteModal(true)}>상품삭제</Button>
-                                <Button onClick={() => navigate(`/item/${id}/edit`)}>상품수정</Button>
+                                <Button onClick={() => navigate(`/item/${type}/${id}/edit`)}>상품수정</Button>
                             </>
                         )}
                     </ButtonGroup>
